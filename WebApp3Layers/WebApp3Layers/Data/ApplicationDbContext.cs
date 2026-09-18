@@ -1,0 +1,24 @@
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using WebApp3Layers.Data.Entities;
+
+namespace WebApp3Layers.Data
+{
+    public class ApplicationDbContext: IdentityDbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+            : base(options)
+        {
+        }
+        public virtual DbSet<Author> Authors { get; set; }
+        public virtual DbSet<Biography> Biographics { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder) 
+        {
+            builder.Entity<Author>()
+                .HasOne(a => a.Biography)
+                .WithOne(b => b.Author)
+                .HasForeignKey<Biography>(b => b.AuthorId);
+            base.OnModelCreating(builder);
+        }
+    }
+}
